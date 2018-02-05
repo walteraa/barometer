@@ -1,0 +1,54 @@
+{
+    "_meta": {
+        "hash": {
+            "sha256": "9ae06d746c7e3447b438d6500b5e724174074d2c12d3904930dabfbfdbd2a5dd"
+        },
+        "host-environment-markers": {
+            "implementation_name": "cpython",
+            "implementation_version": "3.5.2",
+            "os_name": "posix",
+            "platform_machine": "x86_64",
+            "platform_python_implementation": "CPython",
+            "platform_release": "17.3.0",
+            "platform_system": "Darwin",
+            "platform_version": "Darwin Kernel Version 17.3.0: Thu Nov  9 18:09:22 PST 2017; root:xnu-4570.31.3~1/RELEASE_X86_64",
+            "python_full_version": "3.5.2",
+            "python_version": "3.5",
+            "sys_platform": "darwin"
+        },
+        "pipfile-spec": 6,
+        "requires": {},
+        "sources": [
+            {
+                "name": "pypi",
+                "url": "https://pypi.python.org/simple",
+                "verify_ssl": true
+            }
+        ]
+    },
+    "default": {
+        "ping3": {
+            "hashes": [
+                "sha256:c224835eb57322b5e2ea6fdffb52c547259b49109b88f5a70015e22ef01b46a5",
+                "sha256:c1598c7acf5fe811cf1cf9e7cd5babbfaf5966fb0353abacfb5485896dee9d13"
+            ],
+            "version": "==1.0.0"
+        },
+        "pyping": {
+            "hashes": [
+                "sha256:eecee691aef10639ee3e7a716fd5b11721ba5549edc584bbcdd956c67f35ba27"
+            ],
+            "version": "==0.0.5"
+        },
+        "requirements": {
+            "hashes": [
+                "sha256:1502e63b3e1b13b4e045f0c490bcfa12503f9a15891901ef7cd1e2e66dd6cf37"
+            ],
+            "version": "==0.1"
+        },
+        "schedule": {
+            "git": "https://github.com/dbader/schedule"
+        }
+    },
+    "develop": {}
+}
