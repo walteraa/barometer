@@ -1,5 +1,6 @@
 import json
 import time
+import requests
 from ping3 import ping
 
 def send_ping(aggregate,cluster_id, target, callback):
@@ -20,5 +21,11 @@ def http_callback(aggregate,cluster_id, monitoring_data, target, agent_type):
     json_map["value_type"] = type(monitoring_data).__name__
     json_map["metric_value"] = monitoring_data
 
-    print("sending HTTP to:%s",json.dumps(json_map))
-
+    print("sending HTTP to: %s:%d with data: %s"%(aggregate['host'],aggregate['port'],json.dumps(json_map)))
+    
+    #TODO: Add it for a constant
+    URI = "/metric"
+    
+    URL = "http://%s:%d%s"%(aggregate['host'], aggregate['port'], URI)
+    req = requests.post(url = URL, data = json.dumps(json_map))
+    print("\nResponse: %s\n\n"%req.text)

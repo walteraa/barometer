@@ -14,3 +14,4 @@ requirements = "*"
 pyping = { version="*"}
 ping3 = "*"
 schedule = { git="https://github.com/dbader/schedule"}
+requests = "*"
