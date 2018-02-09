@@ -14,7 +14,6 @@ def create_job(conf):
         for target in conf.get_targets():
             threading.Thread(target=send_ping, 
                              args=(conf.get_aggregate(),
-                                   conf.get_cluster_id(),
                                    target,
                                    http_callback,)).start()
     schedule.every().minute.do(create_ping_threads)
