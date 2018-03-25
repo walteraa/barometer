@@ -28,6 +28,14 @@ def save_metric():
 
     return "OK"
 
+@app.route('/bootMetric', methods=['POST'])
+def save_boot_metric():
+
+    content = request.get_json(silent=True)
+    mongo.db.metrics_boot.insert_one(content)
+
+    return "OK"
+
 @app.route('/')
 def liveness():
     return "OK"

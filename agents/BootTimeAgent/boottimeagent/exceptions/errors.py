@@ -25,3 +25,8 @@ class VMStatusError(Exception):
 
     def __init__(self, message):
         self.message = message
+
+class RetrieveAttributesError(Exception):
+
+    def __init__(self, message):
+        self.message = message
