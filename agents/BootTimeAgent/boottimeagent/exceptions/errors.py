@@ -10,12 +10,6 @@ class InvalidStateError(Exception):
         self.message = message
 
 
-class InvalidConfigFileError(Exception):
-
-    def __init__(self, message):
-        self.message = message
-
-
 class VMCreationError(Exception):
 
     def __init__(self, message):
