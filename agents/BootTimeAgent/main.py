@@ -32,7 +32,30 @@ class BootTimeAgent(object):
     def get_duration(self):
         return self._end - self._start
 
-    def check_nova_instance(self):
+    def create_instance(self):
+        instance_name = 'instance-monitor'
+        try:
+            flavor, image, network = self._get_vm_attributes()
+            self.instance = self._nova_client.servers.create(
+                name=instance_name,
+                flavor=flavor,
+                image=image,
+                nics=[{'net-id':network.id}])
+            self._check_nova_instance()
+        except Exception as e:
+            raise VMCreationError("Cannot create vm %s (%s)" % (instance_name, e))
+
+    def _get_vm_attributes(self):
+        try:
+            image = nova_client.images.list()[0]
+            flavor = nova_client.flavors.list()[3]
+            network = nova_client.networks.list()[0]
+        except Exception as e:
+            raise RetrieveAttributesError("Error fetching vm attributes: %"
+                                         % e)
+        return flavor, image, network
+
+    def _check_nova_instance(self):
         self._start = time.time()
         active = False
         while not active:
@@ -49,24 +72,10 @@ class BootTimeAgent(object):
                                 % e)
         return status
 
-    def create_instance(self, flavor, image, network, instance_name='instance-monitor'):
-        try:
-            self.instance = self._nova_client.servers.create(
-                name=instance_name,
-                flavor=flavor,
-                image=image,
-                nics=[{'net-id':network.id}])
-        except Exception as e:
-            raise VMCreationError("Cannot create vm %s (%s)" % (instance_name, e)) 
 
 if __name__ == '__main__':
     conf = Config()
-    conf.load_resources()
     nova_client = NovaClient(conf).setup()
     monitor = BootTimeAgent(nova_client)
-    img = nova_client.images.list()[0]
-    fl = nova_client.flavors.list()[3]
-    net = nova_client.networks.list()[0]
-    monitor.create_instance(fl, img, net)
-    monitor.check_nova_instance()
+    monitor.create_instance()
     print(monitor.get_duration())
