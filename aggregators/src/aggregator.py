@@ -10,10 +10,14 @@ from utils.config import *
 from utils.network import *
 app = Flask(__name__)
 
+
+PORT = 8080
+
 #TODO: define default values when variables are empty
 MONGO_HOST = os.environ['MONGODB_HOST']
 MONGO_PORT = int(os.environ['MONGODB_PORT'])
 mongo = MongoClient(MONGO_HOST, MONGO_PORT)
+
 
 semaphore = True
 
@@ -75,4 +79,4 @@ if __name__ == "__main__":
     conf.load_resources()
     create_job(conf)
     threading.Thread(target=dispatch_job).start()
-    app.run(debug=True,use_reloader=False, host='0.0.0.0', port=int(os.environ["PORT"]))
+    app.run(debug=True,use_reloader=False, host='0.0.0.0', port=PORT)
