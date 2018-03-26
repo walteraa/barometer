@@ -1,9 +1,11 @@
 import time
+
 from keystoneauth1 import loading
 from keystoneauth1 import session
 from novaclient import client
 
 from boottimeagent.utils.config import *
+from boottimeagent.utils.network import *
 from boottimeagent.exceptions import errors
 
 
@@ -26,7 +28,8 @@ class NovaClient(object):
 
 class BootTimeAgent(object):
 
-    def __init__(self, nova_client):
+    def __init__(self, conf, nova_client):
+        self._conf = conf
         self._nova_client = nova_client
 
     def get_duration(self):
@@ -42,14 +45,15 @@ class BootTimeAgent(object):
                 image=image,
                 nics=[{'net-id':network.id}])
             self._check_nova_instance()
+            send_boot_time(instance_name, self._conf.get_aggregate(), self.get_duration())
         except Exception as e:
             raise VMCreationError("Cannot create vm %s (%s)" % (instance_name, e))
 
     def _get_vm_attributes(self):
         try:
-            image = nova_client.images.list()[0]
-            flavor = nova_client.flavors.list()[3]
-            network = nova_client.networks.list()[0]
+            image = self._nova_client.images.list()[0]
+            flavor = self._nova_client.flavors.list()[3]
+            network = self._nova_client.networks.list()[0]
         except Exception as e:
             raise RetrieveAttributesError("Error fetching vm attributes: %"
                                          % e)
@@ -76,6 +80,6 @@ class BootTimeAgent(object):
 if __name__ == '__main__':
     conf = Config()
     nova_client = NovaClient(conf).setup()
-    monitor = BootTimeAgent(nova_client)
+    monitor = BootTimeAgent(conf, nova_client)
     monitor.create_instance()
     print(monitor.get_duration())
