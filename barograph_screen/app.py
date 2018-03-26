@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import json
 import requests
 import datetime
+import os
 
 app = Flask(__name__)
 data = [{
@@ -43,10 +44,11 @@ columns = [
 ]
 
 #jdata=json.dumps(data)
-
+BACKEND_PORT = os.environ['BACKEND_PORT']
+BACKEND_HOST = os.environ['BACKEND_HOST']
 @app.route('/')
 def index():
-    data = requests.get("http://localhost:9001/metric").text
+    data = requests.get("http://%s:%s/metric"%(BACKEND_HOST,BACKEND_PORT)).text
     data = json.loads(data)
     data = list(map(lambda m: {"timestamp": datetime.datetime.fromtimestamp(int(m["timestamp"])).strftime("%d/%m/%Y %H:%M:%S"),
                                 "cluster_id": m["cluster_id"], "avg":m["avg"], "count":m["count"]
@@ -59,4 +61,4 @@ def index():
 
 if __name__ == '__main__':
 	#print jdata
-  app.run(debug=True, port=10000)
+  app.run(debug=True,host='0.0.0.0', port=9000)
