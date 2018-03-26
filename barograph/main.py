@@ -36,5 +36,5 @@ def liveness():
 
 #Starting the server
 if __name__ == "__main__":
-    app.run(debug=True,use_reloader=False, host='0.0.0.0', port=int(os.environ["PORT"]))
+    app.run(debug=True,use_reloader=False, host='0.0.0.0', port=8080)
 
