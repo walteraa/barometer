@@ -46,8 +46,15 @@ class BootTimeAgent(object):
                 nics=[{'net-id':network.id}])
             self._check_nova_instance()
             send_boot_time(instance_name, self._conf.get_aggregate(), self.get_duration())
+            self._delete_instance(self.instance)
         except Exception as e:
             raise VMCreationError("Cannot create vm %s (%s)" % (instance_name, e))
+
+    def _delete_instance(self, instance):
+        try:
+            self._nova_client.servers.delete(instance.id)
+        except Exception:
+            raise VmDeleteError("Cannont delete vm (%s)" % (e))
 
     def _get_vm_attributes(self):
         try:
