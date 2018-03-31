@@ -39,14 +39,13 @@ class BootTimeAgent(object):
         instance_name = 'instance-monitor'
         try:
             flavor, image, network = self._get_vm_attributes()
-            self.instance = self._nova_client.servers.create(
+            instance = self._nova_client.servers.create(
                 name=instance_name,
                 flavor=flavor,
                 image=image,
                 nics=[{'net-id':network.id}])
-            self._check_nova_instance()
+            self._check_nova_instance(instance)
             send_boot_time(instance_name, self._conf.get_aggregate(), self.get_duration())
-            self._delete_instance(self.instance)
         except Exception as e:
             raise VMCreationError("Cannot create vm %s (%s)" % (instance_name, e))
 
@@ -66,18 +65,19 @@ class BootTimeAgent(object):
                                          % e)
         return flavor, image, network
 
-    def _check_nova_instance(self):
+    def _check_nova_instance(self, instance):
         self._start = time.time()
         active = False
         while not active:
-            if self._instance_status() == 'ACTIVE':
+            if self._instance_status(instance) == 'ACTIVE':
                 active = True
                 self._end = time.time()
+                self._delete_instance(instance)
 
-    def _instance_status(self):
+    def _instance_status(self, instance):
         status = None
         try:
-            status = self._nova_client.servers.get(self.instance.id).status
+            status = self._nova_client.servers.get(instance.id).status
         except Exception as e:
             raise VMStatusError("Problem getting status of vm: %s"
                                 % e)
