@@ -9,6 +9,7 @@ url = "https://pypi.python.org/simple"
 Flask = "*"
 pymongo = "*"
 bson = "*"
+Flask-API = "*"
 
 [dev-packages]
 

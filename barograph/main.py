@@ -3,6 +3,7 @@ from bson.json_util import dumps
 import pymongo
 from  pymongo import MongoClient
 from flask import Flask, request
+from flask_api import status
 
 app = Flask(__name__)
 
@@ -17,7 +18,6 @@ def save_metric():
 
     #TODO: validate data before save
     content = request.get_json(silent=True)
-    print(content)
     mongo.db.metrics_barograph.insert_one(content)
     return "OK"
 
@@ -29,6 +29,25 @@ def get_metric():
         result.append(list(mongo.db.metrics_barograph.find({"cluster_id": cluster}).sort("timestamp",pymongo.DESCENDING).limit(1))[0])
 
     return dumps(result)
+
+
+@app.route('/node_info/<id>', methods=['POST'])
+def save_node_info(id):
+
+    cluster = mongo.db.clusters.find_one({"cluster-id":id})
+    if cluster == None:
+        return {"Error": "Cnuster not found" }, status.HTTP_404_NOT_FOUND
+
+    #TODO: validate data before save
+    content = request.get_json(silent=True)
+    result = mongo.db.clusters.update_one({'cluster-id': cluster['cluster-id']}, { '$set': {'node_info': content} }, upsert= False )
+
+    
+    if result.matched_count == 1:
+        return "",status.HTTP_202_ACCEPTED
+    else:
+        return "Error"
+
 @app.route('/')
 def liveness():
     return "OK"
