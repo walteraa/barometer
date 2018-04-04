@@ -86,6 +86,7 @@ class BootTimeAgent(object):
 
 if __name__ == '__main__':
     conf = Config()
+    conf.load_resources()
     nova_client = NovaClient(conf).setup()
     monitor = BootTimeAgent(conf, nova_client)
     monitor.create_instance()
