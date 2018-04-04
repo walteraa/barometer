@@ -74,6 +74,39 @@ def update_cluster_status(id):
     else:
         return "Error"
 
+@app.route('/agg_status/<id>', methods=[ 'POST'])
+def update_agg_status(id):
+
+    cluster = mongo.db.clusters.find_one({"cluster-id":id})
+    if cluster == None:
+        return {"Error": "Cnuster not found" }, status.HTTP_404_NOT_FOUND
+
+
+    result = mongo.db.clusters.update_one({'cluster-id': cluster['cluster-id']}, { '$set': {'agg_status': True} }, upsert= False )
+
+    
+    if result.matched_count == 1:
+        return "",status.HTTP_202_ACCEPTED
+    else:
+        return "Error"
+
+
+@app.route('/agent_status/<id>', methods=[ 'POST'])
+def update_agent_status(id):
+
+    cluster = mongo.db.clusters.find_one({"cluster-id":id})
+    if cluster == None:
+        return {"Error": "Cnuster not found" }, status.HTTP_404_NOT_FOUND
+
+
+    result = mongo.db.clusters.update_one({'cluster-id': cluster['cluster-id']}, { '$set': {'agent_status': True} }, upsert= False )
+
+    
+    if result.matched_count == 1:
+        return "",status.HTTP_202_ACCEPTED
+    else:
+        return "Error"
+
 @app.route('/')
 def liveness():
     return "OK"
