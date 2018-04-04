@@ -48,6 +48,16 @@ def save_node_info(id):
     else:
         return "Error"
 
+@app.route('/node_info', methods=['GET'])
+def list_clusters():
+    clusters_list = list(mongo.db.clusters.find())
+    return dumps(clusters_list)
+
+@app.route('/node_info/<id>', methods=['GET'])
+def get_cluster(id):
+    cluster = mongo.db.clusters.find_one({"cluster-id":id})
+    return dumps(cluster)
+
 @app.route('/')
 def liveness():
     return "OK"
