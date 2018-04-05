@@ -40,13 +40,13 @@ def save_node_info(id):
 
     #TODO: validate data before save
     content = request.get_json(silent=True)
-    result = mongo.db.clusters.update_one({'cluster-id': cluster['cluster-id']}, { '$set': {'node_info': content} }, upsert= False )
-
+    result = mongo.db.clusters.update_one({'cluster-id': id}, { '$set': {'node_info': content} }, upsert= False )
     
+    print(content)
     if result.matched_count == 1:
-        return "",status.HTTP_202_ACCEPTED
+        return "",status.HTTP_200_OK
     else:
-        return "Error"
+        return "Error",status.HTTP_500_INTERNAL_SERVER_ERROR
 
 @app.route('/node_info', methods=['GET'])
 def list_clusters():
@@ -70,7 +70,7 @@ def update_cluster_status(id):
 
     
     if result.matched_count == 1:
-        return "",status.HTTP_202_ACCEPTED
+        return "",status.HTTP_200_OK
     else:
         return "Error"
 
@@ -86,7 +86,7 @@ def update_agg_status(id):
 
     
     if result.matched_count == 1:
-        return "",status.HTTP_202_ACCEPTED
+        return "",status.HTTP_200_OK
     else:
         return "Error"
 
@@ -103,7 +103,7 @@ def update_agent_status(id):
 
     
     if result.matched_count == 1:
-        return "",status.HTTP_202_ACCEPTED
+        return "",status.HTTP_200_OK
     else:
         return "Error"
 
