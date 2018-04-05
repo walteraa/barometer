@@ -47,7 +47,7 @@ def create_job(conf):
         #Do the JOB
         pipeline = [
                 {"$match": {"processed": False }},
-                { "$group": { "_id" : None, "count" : { "$sum": 1 }, "avg": {"$avg": "$metric_value" }}}
+                { "$group": { "_id" : {"cluster_id":"$cluster_id",  metric_name": "$metric_name","value_type"}, "count" : { "$sum": 1 }, "value": {"$avg": "$metric_value" }}}
                 ]
         data = list(mongo.db.metrics_ping.aggregate(pipeline))
         mongo.db.metrics_ping.update(
