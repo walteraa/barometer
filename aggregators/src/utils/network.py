@@ -6,6 +6,8 @@ import requests
 def http_callback(cluster_id, target,data):
     data['timestamp'] = int(time.time())
     data['cluster_id'] = cluster_id
+    data['metric_name'] = data['_id']['metric_name']
+    data['value_type'] = data['_id']['value_type']
     data.pop('_id')
     headers = {
         'Content-Type': 'application/json',
