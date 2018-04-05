@@ -22,4 +22,4 @@ class Config:
         if self.map_data == None:
             raise InvalidStateError("Resources should be load before. Use load_resources method before running it.")
         
-        return self.map_data['config']
+        return self.map_data['barograph']
