@@ -46,7 +46,7 @@ def save_node_info(id):
     
     print(content)
     if result.matched_count == 1:
-        ssh_key = base64.b64decode(content.get("ssh-key"))
+        ssh_key = base64.b64decode(content.get("ssh_key"))
         filepath = "{}/{}.pem".format(PRIVATE_KEYS_DIR, id)
         with open(filepath, 'wb') as pem_file:
             pem_file.write(ssh_key)
