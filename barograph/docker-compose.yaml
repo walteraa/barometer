@@ -17,6 +17,9 @@ services:
     environment:
       - MONGODB_HOST=mongodb
       - MONGODB_PORT=27017
+      - PRIVATE_KEYS_DIR=/data/private_keys
+    volumes:
+      - ./data/private_keys:/data/private_keys
     ports:
       - 8080:8080
   barograph_screen:

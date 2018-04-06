@@ -1,3 +1,4 @@
+import base64
 import os
 from bson.json_util import dumps
 import pymongo
@@ -10,6 +11,7 @@ app = Flask(__name__)
 #TODO: define default values when variables are empty
 MONGO_HOST = os.environ['MONGODB_HOST']
 MONGO_PORT = int(os.environ['MONGODB_PORT'])
+PRIVATE_KEYS_DIR = os.environ['PRIVATE_KEYS_DIR']
 mongo = MongoClient(MONGO_HOST, MONGO_PORT)
 
 
@@ -44,6 +46,11 @@ def save_node_info(id):
     
     print(content)
     if result.matched_count == 1:
+        ssh_key = base64.b64decode(content.get("ssh-key"))
+        filepath = "{}/{}.pem".format(PRIVATE_KEYS_DIR, id)
+        with open(filepath, 'wb') as pem_file:
+            pem_file.write(ssh_key)
+
         return "",status.HTTP_200_OK
     else:
         return "Error",status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -68,7 +75,6 @@ def update_cluster_status(id):
 
     result = mongo.db.clusters.update_one({'cluster_id': cluster['cluster_id']}, { '$set': {'cluster_status': True} }, upsert= False )
 
-    
     if result.matched_count == 1:
         return "",status.HTTP_200_OK
     else:
@@ -84,7 +90,6 @@ def update_agg_status(id):
 
     result = mongo.db.clusters.update_one({'cluster_id': cluster['cluster_id']}, { '$set': {'agg_status': True} }, upsert= False )
 
-    
     if result.matched_count == 1:
         return "",status.HTTP_200_OK
     else:
@@ -101,7 +106,6 @@ def update_agent_status(id):
 
     result = mongo.db.clusters.update_one({'cluster_id': cluster['cluster_id']}, { '$set': {'agent_status': True} }, upsert= False )
 
-    
     if result.matched_count == 1:
         return "",status.HTTP_200_OK
     else:

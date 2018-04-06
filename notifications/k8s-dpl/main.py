@@ -11,9 +11,9 @@ def ack(config):
 
     URL = "http://%s:%d%s"%(config['host'], int(config['port']), URI)
 
-    ok = 202
+    ok = range(200, 206)
 
-    while requests.post(url=URL, headers=headers).status_code != ok:
+    while requests.post(url=URL, headers=headers).status_code not in ok:
         pass
 
 if __name__ == '__main__':
