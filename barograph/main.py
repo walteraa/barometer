@@ -34,13 +34,13 @@ def get_metric():
 @app.route('/node_info/<id>', methods=['POST'])
 def save_node_info(id):
 
-    cluster = mongo.db.clusters.find_one({"cluster-id":id})
+    cluster = mongo.db.clusters.find_one({"cluster_id":id})
     if cluster == None:
         return {"Error": "Cnuster not found" }, status.HTTP_404_NOT_FOUND
 
     #TODO: validate data before save
     content = request.get_json(silent=True)
-    result = mongo.db.clusters.update_one({'cluster-id': id}, { '$set': {'node_info': content} }, upsert= False )
+    result = mongo.db.clusters.update_one({'cluster_id': id}, { '$set': {'node_info': content} }, upsert= False )
     
     print(content)
     if result.matched_count == 1:
@@ -55,18 +55,18 @@ def list_clusters():
 
 @app.route('/node_info/<id>', methods=['GET'])
 def get_cluster(id):
-    cluster = mongo.db.clusters.find_one({"cluster-id":id})
+    cluster = mongo.db.clusters.find_one({"cluster_id":id})
     return dumps(cluster)
 
 @app.route('/cluster_status/<id>', methods=[ 'POST'])
 def update_cluster_status(id):
 
-    cluster = mongo.db.clusters.find_one({"cluster-id":id})
+    cluster = mongo.db.clusters.find_one({"cluster_id":id})
     if cluster == None:
         return {"Error": "Cnuster not found" }, status.HTTP_404_NOT_FOUND
 
 
-    result = mongo.db.clusters.update_one({'cluster-id': cluster['cluster-id']}, { '$set': {'cluster_status': True} }, upsert= False )
+    result = mongo.db.clusters.update_one({'cluster_id': cluster['cluster_id']}, { '$set': {'cluster_status': True} }, upsert= False )
 
     
     if result.matched_count == 1:
@@ -77,12 +77,12 @@ def update_cluster_status(id):
 @app.route('/agg_status/<id>', methods=[ 'POST'])
 def update_agg_status(id):
 
-    cluster = mongo.db.clusters.find_one({"cluster-id":id})
+    cluster = mongo.db.clusters.find_one({"cluster_id":id})
     if cluster == None:
         return {"Error": "Cnuster not found" }, status.HTTP_404_NOT_FOUND
 
 
-    result = mongo.db.clusters.update_one({'cluster-id': cluster['cluster-id']}, { '$set': {'agg_status': True} }, upsert= False )
+    result = mongo.db.clusters.update_one({'cluster_id': cluster['cluster_id']}, { '$set': {'agg_status': True} }, upsert= False )
 
     
     if result.matched_count == 1:
@@ -94,12 +94,12 @@ def update_agg_status(id):
 @app.route('/agent_status/<id>', methods=[ 'POST'])
 def update_agent_status(id):
 
-    cluster = mongo.db.clusters.find_one({"cluster-id":id})
+    cluster = mongo.db.clusters.find_one({"cluster_id":id})
     if cluster == None:
         return {"Error": "Cnuster not found" }, status.HTTP_404_NOT_FOUND
 
 
-    result = mongo.db.clusters.update_one({'cluster-id': cluster['cluster-id']}, { '$set': {'agent_status': True} }, upsert= False )
+    result = mongo.db.clusters.update_one({'cluster_id': cluster['cluster_id']}, { '$set': {'agent_status': True} }, upsert= False )
 
     
     if result.matched_count == 1:
