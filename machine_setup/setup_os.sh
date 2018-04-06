@@ -9,9 +9,8 @@ USERNAME='barograph'
 PROVIDER_IP=$(ip -o route get to 8.8.8.8 | \
               sed -n 's/.*src \([0-9.]\+\).*/\1/p')
 
-apt install -y curl openssl python3.5-minimal \
-    python3-minimal python2.7-minimal \
-    python-minimal
+apt install -y curl openssl python3.5 \
+    python3 python2.7 python
 
 # Create the '$USERNAME' user and allow sudo
 useradd --groups sudo --create-home --user-group $USERNAME \
