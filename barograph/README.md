@@ -8,8 +8,8 @@ Docker Compose for the Dashboard and Endpoints needed.
 
 The instructions bellow, mainly the Installation of Docker CE and Docker Compose are chained to the Ubuntu environment, for more information read:
 
-	1. [Install Docker CE](https://docs.docker.com/install/#docker-ce)
-	2. [Install Docker Compose](https://docs.docker.com/compose/install/)
+1. [Install Docker CE](https://docs.docker.com/install/#docker-ce)
+1. [Install Docker Compose](https://docs.docker.com/compose/install/)
 
 ### Install Docker (Ubuntu 16.04 x86-64)
 
@@ -28,7 +28,9 @@ sudo add-apt-repository \
    stable"
 sudo apt-get update
 sudo apt-get install docker-ce
-sudo docker run hello-world
+sudo usermod -aG docker $USER
+# close session and login again to refresh groups
+docker run hello-world
 ```
 
 ### Install Docker Compose (Ubuntu 16.04 x86-64)
@@ -41,18 +43,18 @@ docker-compose --version
 
 ### Build Application
 
-Build the image so you can use it locally
+Clone repository, enter folder and then build the image so you can use it locally running
 
 ```
 docker build -t barograph .
 ```
 
-Edit the `docker-compose.yml` to point to `barograph:lates` instead of `walteraa/barograph:latest`
+Edit the `docker-compose.yml` to point to `barograph:latest` instead of `walteraa/barograph:latest`
 
 ### Deploy Application
 
 ```
-docker-compose pull
+docker-compose pull # You can ignore access denied error
 docker-compose up -d # -d is for daemon
 ```
 
