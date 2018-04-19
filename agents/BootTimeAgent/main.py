@@ -1,12 +1,11 @@
 import time
 
-from keystoneauth1 import loading
-from keystoneauth1 import session
+from keystoneauth1 import loading, session
 from novaclient import client
 
-from boottimeagent.utils.config import *
-from boottimeagent.utils.network import *
 from boottimeagent.exceptions import errors
+from boottimeagent.utils import network
+from boottimeagent.utils.config import Config
 
 
 class NovaClient(object):
@@ -43,17 +42,19 @@ class BootTimeAgent(object):
                 name=instance_name,
                 flavor=flavor,
                 image=image,
-                nics=[{'net-id':network.id}])
+                nics=[{'net-id': network.id}])
             self._check_nova_instance(instance)
-            send_boot_time(instance_name, self._conf.get_aggregate(), self.get_duration())
+            network.send_boot_time(
+                instance_name, self._conf.get_aggregate(), self.get_duration())
         except Exception as e:
-            raise VMCreationError("Cannot create vm %s (%s)" % (instance_name, e))
+            raise errors.VMCreationError('Cannot create vm %s (%s)' %
+                                         (instance_name, e))
 
     def _delete_instance(self, instance):
         try:
             self._nova_client.servers.delete(instance.id)
-        except Exception:
-            raise VmDeleteError("Cannont delete vm (%s)" % (e))
+        except Exception as e:
+            raise errors.VmDeleteError('Cannont delete vm (%s)' % (e))
 
     def _get_vm_attributes(self):
         try:
@@ -61,8 +62,8 @@ class BootTimeAgent(object):
             flavor = self._nova_client.flavors.list()[3]
             network = self._nova_client.networks.list()[0]
         except Exception as e:
-            raise RetrieveAttributesError("Error fetching vm attributes: %"
-                                         % e)
+            raise errors.RetrieveAttributesError(
+                'Error fetching vm attributes: (%s)' % e)
         return flavor, image, network
 
     def _check_nova_instance(self, instance):
@@ -79,8 +80,8 @@ class BootTimeAgent(object):
         try:
             status = self._nova_client.servers.get(instance.id).status
         except Exception as e:
-            raise VMStatusError("Problem getting status of vm: %s"
-                                % e)
+            raise errors.VMStatusError('Problem getting status of vm: (%s)'
+                                       % e)
         return status
 
 
